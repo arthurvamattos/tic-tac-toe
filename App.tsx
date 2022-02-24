@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dimensions } from "react-native";
 import Cell from "./src/components/Cell";
@@ -25,8 +25,21 @@ const initalCellState: Array<CellProps> = [
   { isSelected: false, player: 1, index: 8 },
 ];
 
+const positionsMatchs = [
+  [0, 3, 6],
+  [0, 1, 2],
+  [0, 4, 8],
+  [1, 4, 7],
+  [3, 4, 5],
+  [2, 4, 6],
+  [2, 5, 8],
+  [6, 7, 8],
+];
+
 export default function App() {
   const [player, setPlayer] = useState<1 | 2>(1);
+  const [gameHasWinner, setGameHasWinner] = useState(false);
+  const [gameHasTie, setGameHasTie] = useState(false);
   const [cells, setCells] = useState<CellProps[]>(initalCellState);
 
   function handleCellSelected(index: number) {
@@ -41,14 +54,53 @@ export default function App() {
     );
   }
 
+  useEffect(() => {
+    verifyIfGameHasAWinner();
+  }, [cells]);
+
+  function verifyIfGameHasAWinner() {
+    let hasWinner = false;
+    if (cells.filter((cell) => cell.isSelected).length > 4) {
+      positionsMatchs.forEach((match) => {
+        if (
+          cells[match[0]].isSelected &&
+          cells[match[1]].isSelected &&
+          cells[match[2]].isSelected
+        ) {
+          if (
+            cells[match[0]].player === cells[match[1]].player &&
+            cells[match[0]].player === cells[match[2]].player
+          ) {
+            setGameHasWinner(true);
+            hasWinner = true;
+            return;
+          }
+        }
+      });
+    }
+    if (cells.filter((cell) => cell.isSelected).length === 9 && !hasWinner) {
+      setGameHasTie(true);
+    }
+  }
+
   function setCellsInitalState() {
     setCells(initalCellState);
+    setGameHasWinner(false);
+    setGameHasTie(false);
   }
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.title}>Tic Tac Toe</Text>
+
+      <View>
+        <Text style={styles.title}>Tic Tac Toe</Text>
+        {gameHasWinner && (
+          <Text style={styles.winner}>{`Player ${player} is the winner!`}</Text>
+        )}
+        {gameHasTie && <Text style={styles.winner}>{`Game has a tie!`}</Text>}
+      </View>
+
       <View style={styles.wrapper}>
         {cells.map((cell) => (
           <Cell
@@ -56,6 +108,7 @@ export default function App() {
             player={cell.player}
             index={cell.index}
             key={cell.index}
+            disabled={gameHasWinner || gameHasTie}
             onPress={() => handleCellSelected(cell.index)}
           />
         ))}
@@ -78,13 +131,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#918f8f",
+    color: "#363636",
     marginTop: Constants.statusBarHeight + 48,
+    textAlign: "center",
+  },
+  winner: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#363636",
+    marginTop: 8,
+    textAlign: "center",
   },
   wrapper: {
     width: Dimensions.get("window").width * 0.9,
     height: Dimensions.get("window").width * 0.9,
-    backgroundColor: "#918f8f",
+    backgroundColor: "#363636",
 
     flexDirection: "row",
     flexWrap: "wrap",

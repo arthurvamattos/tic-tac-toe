@@ -19,9 +19,9 @@ export default function Cell({ isSelected, player, ...rest }: CellProps) {
     <TouchableOpacity style={styles.container} activeOpacity={0.95} {...rest}>
       {isSelected ? (
         player === 1 ? (
-          <Feather name="x" size={56} color="#918f8f" />
+          <Feather name="x" size={56} color="#363636" />
         ) : (
-          <Feather name="circle" size={48} color="#918f8f" />
+          <Feather name="circle" size={48} color="#363636" />
         )
       ) : (
         <View></View>
