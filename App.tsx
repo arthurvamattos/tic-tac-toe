@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dimensions } from "react-native";
 import Cell from "./src/components/Cell";
@@ -26,13 +26,11 @@ export default function App() {
   ]);
 
   function handleCellSelected(index: number) {
-    console.log("called");
     if (cells[index].isSelected) return;
     setCells((oldState) =>
       oldState.map((cell) => {
         if (cell.index === index) {
-          console.log(true, player, index);
-          setPlayer(player == 1 ? 2 : 1);
+          setPlayer(player === 1 ? 2 : 1);
           return { isSelected: true, player, index };
         } else return cell;
       })
@@ -47,7 +45,7 @@ export default function App() {
         {cells.map((cell) => (
           <Cell
             isSelected={cell.isSelected}
-            player={1}
+            player={cell.player}
             index={cell.index}
             key={cell.index}
             onPress={() => handleCellSelected(cell.index)}

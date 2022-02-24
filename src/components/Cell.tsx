@@ -1,17 +1,22 @@
-import { Dimensions, StyleSheet, View } from "react-native";
-import { RectButton, RectButtonProps } from "react-native-gesture-handler";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-type CellProps = RectButtonProps & {
+type CellProps = TouchableOpacityProps & {
   isSelected: boolean;
   player: 1 | 2 | undefined;
   index: number;
   // isPartOfHatTrick: boolean;
 };
 
-export default function Cell({ isSelected, player, ...props }: CellProps) {
+export default function Cell({ isSelected, player, ...rest }: CellProps) {
   return (
-    <RectButton style={styles.container} {...props}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.95} {...rest}>
       {isSelected ? (
         player === 1 ? (
           <Feather name="x" size={48} color="#585666" />
@@ -21,7 +26,7 @@ export default function Cell({ isSelected, player, ...props }: CellProps) {
       ) : (
         <View></View>
       )}
-    </RectButton>
+    </TouchableOpacity>
   );
 }
 
