@@ -1,6 +1,6 @@
 <h1 align="center">
 <br>
-  <img src="https://user-images.githubusercontent.com/23246257/155601793-08192583-cb61-4cd3-963c-c734b7637764.png" alt="tic tac toe logo" width="120">
+  <img src="https://user-images.githubusercontent.com/23246257/156241479-1145d8c5-31ad-4bb0-a8bc-88fb8f3c1062.png" alt="tic tac toe logo" width="120">
 <br>
 <br>
 Tic Tac Toe
@@ -15,7 +15,7 @@ Tic Tac Toe
 </p>
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/23246257/155601961-6229bb45-2fe8-45bf-9408-f44507a1db0d.gif" alt="demo" height="420">
+  <img src="https://user-images.githubusercontent.com/23246257/156241491-4713bed5-8498-4cd4-b4e7-4848a08eb765.gif" alt="demo" height="420">
 </div>
 
 <hr />
