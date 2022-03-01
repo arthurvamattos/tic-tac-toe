@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, Vibration, View } from "react-native";
 import { Dimensions } from "react-native";
 import Cell from "./src/components/Cell";
 import Constants from "expo-constants";
@@ -10,19 +10,19 @@ type CellProps = {
   isSelected: boolean;
   player: 1 | 2 | undefined;
   index: number;
-  // isPartOfHatTrick: boolean;
+  isPartOfTheMatch: boolean;
 };
 
 const initalCellState: Array<CellProps> = [
-  { isSelected: false, player: 1, index: 0 },
-  { isSelected: false, player: 1, index: 1 },
-  { isSelected: false, player: 1, index: 2 },
-  { isSelected: false, player: 1, index: 3 },
-  { isSelected: false, player: 1, index: 4 },
-  { isSelected: false, player: 1, index: 5 },
-  { isSelected: false, player: 1, index: 6 },
-  { isSelected: false, player: 1, index: 7 },
-  { isSelected: false, player: 1, index: 8 },
+  { isSelected: false, player: 1, index: 0, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 1, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 2, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 3, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 4, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 5, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 6, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 7, isPartOfTheMatch: false },
+  { isSelected: false, player: 1, index: 8, isPartOfTheMatch: false },
 ];
 
 const positionsMatchs = [
@@ -36,6 +36,8 @@ const positionsMatchs = [
   [6, 7, 8],
 ];
 
+const SHORT_VIBRATION_DURATION = 0.2 * 1000; // time of vibration x one second in ms
+
 export default function App() {
   const [player, setPlayer] = useState<1 | 2>(1);
   const [gameHasWinner, setGameHasWinner] = useState(false);
@@ -43,19 +45,27 @@ export default function App() {
   const [cells, setCells] = useState<CellProps[]>(initalCellState);
 
   function handleCellSelected(index: number) {
+    Vibration.vibrate(SHORT_VIBRATION_DURATION);
+
     if (cells[index].isSelected) return;
     setCells((oldState) =>
       oldState.map((cell) => {
         if (cell.index === index) {
+          const updatedCell = {
+            isSelected: true,
+            player,
+            index,
+            isPartOfTheMatch: false,
+          };
           setPlayer(player === 1 ? 2 : 1);
-          return { isSelected: true, player, index };
+          return updatedCell;
         } else return cell;
       })
     );
   }
 
   useEffect(() => {
-    verifyIfGameHasAWinner();
+    if (!gameHasTie && !gameHasWinner) verifyIfGameHasAWinner();
   }, [cells]);
 
   function verifyIfGameHasAWinner() {
@@ -72,7 +82,20 @@ export default function App() {
             cells[match[0]].player === cells[match[2]].player
           ) {
             setGameHasWinner(true);
+            setCells((oldState) =>
+              oldState.map((cell) => {
+                if (match.indexOf(cell.index) !== -1) {
+                  return {
+                    isSelected: true,
+                    player: cell.player,
+                    index: cell.index,
+                    isPartOfTheMatch: true,
+                  };
+                } else return cell;
+              })
+            );
             hasWinner = true;
+
             return;
           }
         }
@@ -84,6 +107,7 @@ export default function App() {
   }
 
   function setCellsInitalState() {
+    Vibration.vibrate(SHORT_VIBRATION_DURATION);
     setCells(initalCellState);
     setGameHasWinner(false);
     setGameHasTie(false);
@@ -96,9 +120,16 @@ export default function App() {
       <View>
         <Text style={styles.title}>Tic Tac Toe</Text>
         {gameHasWinner && (
-          <Text style={styles.winner}>{`Player ${player} is the winner!`}</Text>
+          <Text style={styles.winner}>{`Player '${
+            player === 1 ? "o" : "x"
+          }' is the winner!`}</Text>
         )}
         {gameHasTie && <Text style={styles.winner}>{`Game has a tie!`}</Text>}
+        {!gameHasTie && !gameHasWinner && (
+          <Text style={styles.winner}>{`Turn of player '${
+            player === 1 ? "x" : "o"
+          }'`}</Text>
+        )}
       </View>
 
       <View style={styles.wrapper}>
@@ -107,6 +138,7 @@ export default function App() {
             isSelected={cell.isSelected}
             player={cell.player}
             index={cell.index}
+            isPartOfTheMatch={cell.isPartOfTheMatch}
             key={cell.index}
             disabled={gameHasWinner || gameHasTie}
             onPress={() => handleCellSelected(cell.index)}
@@ -124,28 +156,28 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#d3d6d6",
+    backgroundColor: "#010106",
     alignItems: "center",
     justifyContent: "space-between",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#363636",
+    color: "#bbb",
     marginTop: Constants.statusBarHeight + 48,
     textAlign: "center",
   },
   winner: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#363636",
+    color: "#bbb",
     marginTop: 8,
     textAlign: "center",
   },
   wrapper: {
     width: Dimensions.get("window").width * 0.9,
     height: Dimensions.get("window").width * 0.9,
-    backgroundColor: "#363636",
+    backgroundColor: "#bbb",
 
     flexDirection: "row",
     flexWrap: "wrap",

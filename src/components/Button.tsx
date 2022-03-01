@@ -1,5 +1,4 @@
 import {
-  Dimensions,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -16,9 +15,9 @@ export default function Button({ icon, text, ...rest }: ButtonProps) {
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.95} {...rest}>
       {icon === "refresh" ? (
-        <Feather name="refresh-cw" size={24} color="#f1f1f6" />
+        <Feather name="refresh-cw" size={24} color="#bbb" />
       ) : (
-        <Feather name="x" size={24} color="#f1f1f6" />
+        <Feather name="x" size={24} color="#bbb" />
       )}
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
@@ -27,18 +26,22 @@ export default function Button({ icon, text, ...rest }: ButtonProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#363636",
+    backgroundColor: "#010106",
     width: "50%",
     padding: 16,
+    paddingHorizontal: 32,
     borderRadius: 4,
 
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+
+    borderColor: "#bbb",
+    borderWidth: 2,
   },
 
   text: {
-    color: "#f1f1f6",
+    color: "#bbb",
     fontSize: 16,
   },
 });

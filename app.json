@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "A tic tac toe game app",
+    "githubUrl": "https://github.com/arthurvamattos/tic-tac-toe/tree/main"
   }
 }

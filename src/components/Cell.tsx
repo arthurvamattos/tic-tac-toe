@@ -11,17 +11,30 @@ type CellProps = TouchableOpacityProps & {
   isSelected: boolean;
   player: 1 | 2 | undefined;
   index: number;
-  // isPartOfHatTrick: boolean;
+  isPartOfTheMatch: boolean;
 };
 
-export default function Cell({ isSelected, player, ...rest }: CellProps) {
+export default function Cell({
+  isSelected,
+  player,
+  isPartOfTheMatch,
+  ...rest
+}: CellProps) {
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.95} {...rest}>
       {isSelected ? (
         player === 1 ? (
-          <Feather name="x" size={56} color="#363636" />
+          <Feather
+            name="x"
+            size={56}
+            color={isPartOfTheMatch ? "#89CA78" : "#EF596F"}
+          />
         ) : (
-          <Feather name="circle" size={48} color="#363636" />
+          <Feather
+            name="circle"
+            size={48}
+            color={isPartOfTheMatch ? "#89CA78" : "#52ADF2"}
+          />
         )
       ) : (
         <View></View>
@@ -32,7 +45,7 @@ export default function Cell({ isSelected, player, ...rest }: CellProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#d3d6d6",
+    backgroundColor: "#010106",
     alignItems: "center",
     justifyContent: "center",
 
