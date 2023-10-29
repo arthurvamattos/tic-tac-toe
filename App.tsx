@@ -40,6 +40,8 @@ const SHORT_VIBRATION_DURATION = 0.2 * 1000; // time of vibration x one second i
 
 export default function App() {
   const [player, setPlayer] = useState<1 | 2>(1);
+  const [playerXscore, setPlayerXScore] = useState(0);
+  const [playerOscore, setPlayerOScore] = useState(0);
   const [gameHasWinner, setGameHasWinner] = useState(false);
   const [gameHasTie, setGameHasTie] = useState(false);
   const [cells, setCells] = useState<CellProps[]>(initalCellState);
@@ -82,6 +84,7 @@ export default function App() {
             cells[match[0]].player === cells[match[2]].player
           ) {
             setGameHasWinner(true);
+
             setCells((oldState) =>
               oldState.map((cell) => {
                 if (match.indexOf(cell.index) !== -1) {
@@ -94,8 +97,14 @@ export default function App() {
                 } else return cell;
               })
             );
-            hasWinner = true;
 
+            if (player == 2) {
+              setPlayerXScore((old) => old + 1);
+            } else {
+              setPlayerOScore((old) => old + 1);
+            }
+
+            hasWinner = true;
             return;
           }
         }
@@ -119,16 +128,19 @@ export default function App() {
 
       <View>
         <Text style={styles.title}>Tic Tac Toe</Text>
+
+        <Text style={styles.scoreboard}>
+          <Text style={styles.player}>Player X</Text> {`${playerXscore}`} - {`${playerOscore}`} <Text style={styles.player}>Player O</Text>
+        </Text>
+
         {gameHasWinner && (
-          <Text style={styles.winner}>{`Player '${
-            player === 1 ? "o" : "x"
-          }' is the winner!`}</Text>
+          <Text style={styles.winner}>{`Player '${player === 1 ? "o" : "x"
+            }' is the winner!`}</Text>
         )}
         {gameHasTie && <Text style={styles.winner}>{`Game has a tie!`}</Text>}
         {!gameHasTie && !gameHasWinner && (
-          <Text style={styles.winner}>{`Turn of player '${
-            player === 1 ? "x" : "o"
-          }'`}</Text>
+          <Text style={styles.winner}>{`Turn of player '${player === 1 ? "x" : "o"
+            }'`}</Text>
         )}
       </View>
 
@@ -186,4 +198,16 @@ const styles = StyleSheet.create({
   buttonsWrapper: {
     marginBottom: Dimensions.get("window").height * 0.12,
   },
+  scoreboard: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#bbb",
+    marginTop: 8,
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  player: {
+    color: '#ECA72C',
+    fontSize: 20,
+  }
 });
